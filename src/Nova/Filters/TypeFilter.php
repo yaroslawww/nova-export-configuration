@@ -8,7 +8,6 @@ use NovaExportConfiguration\NovaExportConfig;
 
 class TypeFilter extends BooleanFilter
 {
-
     protected string $fieldName = 'type';
 
     public function apply(NovaRequest $request, $query, $value)

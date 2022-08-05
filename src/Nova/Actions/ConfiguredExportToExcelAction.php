@@ -37,18 +37,18 @@ class ConfiguredExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Action
         $model = $request->findModelOrFail($request->resources);
 
         $repo = NovaExportConfig::getRepositories()->getByName($model->type);
-        if (! $repo) {
+        if (!$repo) {
             return Action::danger(__('Export repository not found.'));
         }
         $resource = $request->resource();
-        $type = $resource::uriKey();
-        $name = $this->getFilename();
+        $type     = $resource::uriKey();
+        $name     = $this->getFilename();
         $filename = date('Y/m/d/').Str::uuid().'.'.$this->getDefaultExtension();
-        $disk = $this->getDisk() ?: $repo->disk();
-        $filters = $request->filters;
-        $fields = $request->resolveFields();
+        $disk     = $this->getDisk() ?: $repo->disk();
+        $filters  = $request->filters;
+        $fields   = $request->resolveFields();
 
-        $dbExport = new ExportStoredFile();
+        $dbExport       = new ExportStoredFile();
         $dbExport->type = $type;
         $dbExport->disk = $disk;
         $dbExport->path = $filename;
@@ -60,7 +60,7 @@ class ConfiguredExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Action
             $dbExport->meta->setAttribute('author.id', $user->getKey());
         }
 
-        $export = $repo->export($model, serialize($dbExport));
+        $export    = $repo->export($model, serialize($dbExport));
         $queueName = $this->queueName ?: $repo->queue();
         if ($queueName) {
             $export->queue(

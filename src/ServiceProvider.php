@@ -31,10 +31,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/nova-export-configuration.php', 'nova-export-configuration');
     }
 
-    public function configureExportResource() {
+    public function configureExportResource()
+    {
         ExportConfiguration::$model = NovaExportConfig::$configurationModelClass;
         ExportConfiguration::$group = __('Export');
     }
-
-
 }

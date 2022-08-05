@@ -28,5 +28,4 @@ abstract class ExportQuery
      * @return Builder
      */
     abstract public function query();
-
 }

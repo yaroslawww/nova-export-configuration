@@ -30,7 +30,7 @@ abstract class ConfiguredExport implements FromQuery, WithMapping, WithEvents, W
     protected string $fileModelData = '';
 
     protected ?string $notificationUserClass = null;
-    protected ?int $notificationUserId = null;
+    protected ?int $notificationUserId       = null;
 
     public function __construct(ExportQuery $exportQuery)
     {
@@ -55,7 +55,7 @@ abstract class ConfiguredExport implements FromQuery, WithMapping, WithEvents, W
 
     public function setNotificationUser(?Model $notificationUser = null): static
     {
-        $this->notificationUserId = $notificationUser?->getKey();
+        $this->notificationUserId    = $notificationUser?->getKey();
         $this->notificationUserClass = $notificationUser?->getMorphClass();
 
         return $this;

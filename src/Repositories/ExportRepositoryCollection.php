@@ -8,12 +8,11 @@ class ExportRepositoryCollection extends Collection
 {
     public function getByName(?string $name): ?ExportRepository
     {
-        return $this->first(fn($item) => $item->name() === $name);
+        return $this->first(fn ($item) => $item->name() === $name);
     }
 
     public function uniqueNames(): ExportRepositoryCollection
     {
-        return $this->unique(fn($item) => $item->name());
+        return $this->unique(fn ($item) => $item->name());
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace NovaExportConfiguration\Repositories;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +75,7 @@ abstract class ExportRepository
         if ($model->exists && $model->getKey() && $this->pivotRelation($model)) {
             $this->rebuildAttachedPivots(dispatch(function () use ($model) {
                 $pivotRelation = $this->pivotRelation($model);
-                $query = $this->exportQuery($model)->query();
+                $query         = $this->exportQuery($model)->query();
                 $pivotRelation->detach();
                 $query->select('id')
                       ->chunk(1000, function ($models) use ($pivotRelation) {
@@ -93,6 +92,5 @@ abstract class ExportRepository
 
     protected function rebuildAttachedPivots(PendingDispatch $pendingDispatch): void
     {
-
     }
 }

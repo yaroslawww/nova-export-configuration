@@ -2,11 +2,11 @@
 
 namespace NovaExportConfiguration\Nova\Resources;
 
-use Laravel\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 
 class ExportStoredFile extends Resource
 {

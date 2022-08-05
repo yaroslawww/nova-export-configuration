@@ -2,13 +2,13 @@
 
 namespace NovaExportConfiguration\Nova\Resources;
 
-use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Laravel\Nova\Resource;
 use NovaExportConfiguration\Nova\Actions\ConfiguredExportToExcelAction;
 use NovaExportConfiguration\Nova\Actions\RegenerateExportResultAction;
 use NovaExportConfiguration\Nova\Filters\TypeFilter;
@@ -41,7 +41,7 @@ class ExportConfiguration extends Resource
                   ->searchable()
                   ->options(NovaExportConfig::typeOptions()),
             Text::make(__('Type'), 'type')
-                ->displayUsing(fn($val, $model) => NovaExportConfig::getRepositories()->getByName($model?->type)?->label())
+                ->displayUsing(fn ($val, $model) => NovaExportConfig::getRepositories()->getByName($model?->type)?->label())
                 ->hideWhenUpdating()
                 ->hideWhenCreating()
                 ->sortable(),
@@ -59,7 +59,7 @@ class ExportConfiguration extends Resource
                         'max:3000',
                     ]),
             Text::make(__('Description'), 'description')
-                ->displayUsing(fn($val) => nl2br($val))
+                ->displayUsing(fn ($val) => nl2br($val))
                 ->asHtml()
                 ->onlyOnIndex(),
             new Panel(__('Filters'), $this->filterFields($request)),
@@ -76,7 +76,7 @@ class ExportConfiguration extends Resource
     protected function getRepo(NovaRequest $request): ?ExportRepository
     {
         $type = $this->model()?->type;
-        if (! $type) {
+        if (!$type) {
             if ($request->viaResource()) {
                 $type = $request->viaResource()::find($request->viaResourceId)?->type;
             } else {

@@ -2,12 +2,11 @@
 
 namespace NovaExportConfiguration\Casts\Json;
 
-use NovaExportConfiguration\Enums\ConfigValueType;
 use JsonFieldCast\Json\AbstractMeta;
+use NovaExportConfiguration\Enums\ConfigValueType;
 
 class ExportConfigFilters extends AbstractMeta
 {
-
     const CONDITION_TYPE = 'condition_type';
 
     /* -------------------
@@ -65,7 +64,7 @@ class ExportConfigFilters extends AbstractMeta
     public function setFilterArrayItem(
         string $attributeName,
         string $key,
-               $value,
+        $value,
         callable $condition = null
     ): self {
         if (!$condition) {

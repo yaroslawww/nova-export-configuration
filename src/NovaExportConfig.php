@@ -40,8 +40,8 @@ class NovaExportConfig
 
     public static function useConfigurationModelClass(string $class): static
     {
-        if (! is_a($class, ExportConfig::class, true)) {
-            throw new \InvalidArgumentException("Class should extend ExportConfig");
+        if (!is_a($class, ExportConfig::class, true)) {
+            throw new \InvalidArgumentException('Class should extend ExportConfig');
         }
 
         static::$configurationModelClass = $class;
@@ -103,9 +103,7 @@ class NovaExportConfig
     public static function typeOptions(): array
     {
         return static::getRepositories()
-                        ->mapWithKeys(fn($repo) => [$repo->name() => $repo->label()])
+                        ->mapWithKeys(fn ($repo) => [$repo->name() => $repo->label()])
                         ->toArray();
     }
-
-
 }

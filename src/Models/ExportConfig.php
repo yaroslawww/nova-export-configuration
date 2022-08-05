@@ -26,8 +26,8 @@ class ExportConfig extends Model
 
     protected $casts = [
         'last_export_at' => 'datetime',
-        'filters' => ExportConfigFilters::class,
-        'meta' => SimpleJsonField::class,
+        'filters'        => ExportConfigFilters::class,
+        'meta'           => SimpleJsonField::class,
     ];
 
     public function getTable()
@@ -47,23 +47,23 @@ class ExportConfig extends Model
                 $model->updateConfigurationContent();
             }
         });
-        static::created(fn(self $model) => $model->updateConfigurationContent());
+        static::created(fn (self $model) => $model->updateConfigurationContent());
     }
 
     public function exportRepository(): ?ExportRepository
     {
         return NovaExportConfig::getRepositories()->getByName($this->attributes['type']??null);
-}
+    }
 
     public function updateConfigurationContent(bool $persist = false)
     {
-        if($repo = $this->exportRepository()) {
+        if ($repo = $this->exportRepository()) {
             $this->fill([
-                'sql_query' => QueryString::readableSqlQuery($repo->exportQuery($this)->query())
+                'sql_query' => QueryString::readableSqlQuery($repo->exportQuery($this)->query()),
             ]);
             $repo->regenerateConfigurationData($this, $persist);
 
-            if($persist) {
+            if ($persist) {
                 $this->save();
             }
         }
@@ -71,7 +71,7 @@ class ExportConfig extends Model
 
     public function setAttribute($key, $value)
     {
-        if(($repo = $this->exportRepository()) && $repo->isFilterKey($key)) {
+        if (($repo = $this->exportRepository()) && $repo->isFilterKey($key)) {
             return $repo->modelSetAttribute($this, $key, $value);
         }
 
@@ -80,7 +80,7 @@ class ExportConfig extends Model
 
     public function getAttribute($key)
     {
-        if(($repo = $this->exportRepository()) && $repo->isFilterKey($key)) {
+        if (($repo = $this->exportRepository()) && $repo->isFilterKey($key)) {
             return $repo->modelGetAttribute($this, $key);
         }
 
