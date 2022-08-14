@@ -70,7 +70,7 @@ class ExportConfiguration extends Resource
 
     protected function filterFields(NovaRequest $request): array
     {
-        return ($repo = $this->getRepo($request)) ? $repo->novaResourceConfig()->filterFields($request) : [];
+        return ($repo = $this->getRepo($request)) ? $repo->novaResourceConfig()->filterFields($request, $this) : [];
     }
 
     protected function getRepo(NovaRequest $request): ?ExportRepository
