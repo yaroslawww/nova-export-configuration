@@ -17,11 +17,11 @@
     "require": {
         "php": "^8.1",
         "laravel/nova": "^4.0",
-        "yaroslawww/laravel-json-field-cast": "^1.2",
+        "yaroslawww/laravel-json-field-cast": "^2.1",
         "maatwebsite/laravel-nova-excel": "^1.3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.9",
+        "friendsofphp/php-cs-fixer": "^3.11",
         "orchestra/testbench": "^7.6",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-laravel": "^2.0",
