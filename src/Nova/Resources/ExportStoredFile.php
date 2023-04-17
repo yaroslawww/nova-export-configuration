@@ -2,11 +2,13 @@
 
 namespace NovaExportConfiguration\Nova\Resources;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
+use NovaExportConfiguration\Nova\Actions\CustomFileExports;
+use NovaExportConfiguration\NovaExportConfig;
 
 class ExportStoredFile extends Resource
 {
@@ -25,7 +27,7 @@ class ExportStoredFile extends Resource
         return __('Exported Files');
     }
 
-    public function fields(Request $request)
+    public function fields(NovaRequest $request)
     {
         return [
             ID::make(__('ID'), 'id')
@@ -49,5 +51,19 @@ class ExportStoredFile extends Resource
                 ])->render();
             })->asHtml()->hideWhenCreating()->hideWhenUpdating(),
         ];
+    }
+
+    public function actions(NovaRequest $request)
+    {
+        $actions = [];
+
+        if(!empty($exportsList = NovaExportConfig::customExportsOptions())) {
+            $actions[] = CustomFileExports::make()
+                ->exportsList($exportsList)
+                ->askForFilename()
+                ->askForWriterType();
+        }
+
+        return $actions;
     }
 }

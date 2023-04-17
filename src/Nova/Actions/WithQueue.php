@@ -13,8 +13,8 @@ trait WithQueue
         return $this;
     }
 
-    protected function getDisk(): ?string
+    protected function getQueue(?string $default = null): ?string
     {
-        return $this->queueName;
+        return $this->queueName ?: $default;
     }
 }

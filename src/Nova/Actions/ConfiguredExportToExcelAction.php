@@ -61,8 +61,7 @@ class ConfiguredExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Action
         }
 
         $export    = $repo->export($model, serialize($dbExport));
-        $queueName = $this->queueName ?: $repo->queue();
-        if ($queueName) {
+        if ($queueName = $this->getQueue($repo->queue())) {
             $export->queue(
                 $filename,
                 $disk,

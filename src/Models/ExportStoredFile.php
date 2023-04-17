@@ -22,7 +22,7 @@ class ExportStoredFile extends Model
         'meta' => SimpleJsonField::class,
     ];
 
-    public function getTable()
+    public function getTable(): string
     {
         return config('nova-export-configuration.tables.export_config_stored_files');
     }

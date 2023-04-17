@@ -4,6 +4,7 @@ namespace NovaExportConfiguration;
 
 use Closure;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaExportConfiguration\Export\CustomExport;
 use NovaExportConfiguration\Models\ExportConfig;
 use NovaExportConfiguration\Repositories\ExportRepository;
 use NovaExportConfiguration\Repositories\ExportRepositoryCollection;
@@ -29,6 +30,11 @@ class NovaExportConfig
      * Additional actions
      */
     public static Closure|array|null $configurationActionsCallback = null;
+
+    /**
+     * @var array
+     */
+    public static array $customExports = [];
 
 
     public static function ignoreMigrations(): static
@@ -105,5 +111,61 @@ class NovaExportConfig
         return static::getRepositories()
                         ->mapWithKeys(fn ($repo) => [$repo->name() => $repo->label()])
                         ->toArray();
+    }
+
+
+
+    public static function useCustomExportsToFile(string|CustomExport|array $customExport): static
+    {
+        if (is_array($customExport)) {
+            foreach ($customExport as $customExportItem) {
+                static::useCustomExportsToFile($customExportItem);
+            }
+
+            return new static;
+        }
+
+        if (!is_string($customExport)) {
+            $customExport = $customExport::class;
+        }
+
+        if (!is_subclass_of($customExport, CustomExport::class)) {
+            throw new \Exception('Custom export should be subclass of ' . CustomExport::class);
+        }
+
+        static::$customExports[] = $customExport;
+
+        return new static;
+    }
+
+    public static function customExportsOptions(): array
+    {
+        $exportsList   = [];
+        $customExports = NovaExportConfig::$customExports;
+        if(!empty($customExports)) {
+            /** @var CustomExport $customExport */
+            foreach ($customExports as $customExport) {
+                $exportsList[$customExport::key()] = $customExport::name();
+            }
+        }
+
+        return $exportsList;
+    }
+
+    public static function customExportsByKey(string $key): ?CustomExport
+    {
+        $customExports = NovaExportConfig::$customExports;
+        if(!empty($customExports)) {
+            /** @var CustomExport $customExport */
+            foreach ($customExports as $customExport) {
+                if($customExport::key() != $key) {
+                    continue;
+                }
+
+                return new $customExport;
+            }
+        }
+
+        return null;
     }
 }

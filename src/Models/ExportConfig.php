@@ -30,7 +30,7 @@ class ExportConfig extends Model
         'meta'           => SimpleJsonField::class,
     ];
 
-    public function getTable()
+    public function getTable(): string
     {
         return config('nova-export-configuration.tables.export_configs');
     }
