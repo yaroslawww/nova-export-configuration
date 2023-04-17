@@ -69,7 +69,7 @@ class CustomFileExports extends Action
         $type       = 'custom-export';
         $name       = $fields->get('filename', $exportable::name()) . '.' . Str::lower($writerType ?: 'xlsx');
         $filename   = date('Y/m/d/') . Str::uuid() . '.' . Str::lower($writerType ?: 'xlsx');
-        $disk       = $this->getDisk()?: $exportable::diskName();
+        $disk       = $this->getDisk() ?: $exportable::diskName();
 
         $response = Excel::store(
             $exportable,
@@ -99,13 +99,15 @@ class CustomFileExports extends Action
                 $disk,
                 $writerType
             )->allOnQueue($queueName);
-        } else {
-            $exportable->store(
-                $filename,
-                $disk,
-                $writerType
-            );
+
+            return Action::message(__('Request added to queue. Please wait a while to complete it.'));
         }
+
+        $exportable->store(
+            $filename,
+            $disk,
+            $writerType
+        );
 
         return Action::message(__('Data exported to file.'));
     }
