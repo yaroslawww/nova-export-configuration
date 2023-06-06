@@ -24,6 +24,49 @@ composer require yaroslawww/nova-export-configuration
 php artisan vendor:publish --provider="NovaExportConfiguration\ServiceProvider" --tag="config"
 ```
 
+Update filesystem configuration if you will used default disks.
+
+```php
+// config/filesystems.php
+'exports'                            => [
+    'driver' => 'local',
+    'root'   => storage_path('app/exports'),
+],
+'exports_configured'                 => [
+    'driver' => 'local',
+    'root'   => storage_path('app/exports_configured'),
+],
+```
+
+## Usage
+
+### General export action
+
+```php
+public function actions(NovaRequest $request): array
+{
+    return [
+        ExportToExcelAction::make()
+            ->askForFilename()
+            ->askForWriterType()
+            ->askForColumns([
+                'id',
+                'title' => 'Fund title',
+                'publication_status',
+                'description',
+                'color_code',
+                'selected_report',
+            ])
+            ->setPostReplaceFieldValuesWhenOnResource(function ($array, \App\Models\Fund $model, $only) {
+                if (in_array('selected_report', $only)) {
+                    $array['selected_report'] = $model->selectedReport->report_date?->format('Y-m-d');
+                }
+                return $array;
+            }),
+    ];
+}
+```
+
 ## Credits
 
 - [![Think Studio](https://yaroslawww.github.io/images/sponsors/packages/logo-think-studio.png)](https://think.studio/)

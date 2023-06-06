@@ -47,7 +47,7 @@ class ExportStoredFile extends Resource
 
             Text::make(__('Download Link'), function () {
                 return view('nova-export-configuration::link', [
-                    'path' => $this->path,
+                    'href' => $this->download_link,
                 ])->render();
             })->asHtml()->hideWhenCreating()->hideWhenUpdating(),
         ];

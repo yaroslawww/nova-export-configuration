@@ -10,6 +10,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'nova-export-configuration');
 
+        if (NovaExportConfig::$useRoutes) {
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        }
+
         if ($this->app->runningInConsole()) {
             if (NovaExportConfig::$runsMigrations) {
                 $this->loadMigrationsFrom(__DIR__.'/../database/migrations');

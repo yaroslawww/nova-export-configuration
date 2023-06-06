@@ -40,7 +40,7 @@ trait WithNotification
             $user->notify(
                 NovaNotification::make()
                     ->message("File {$fileModel->name} exported")
-                    ->action('Download', URL::remote($this->downloadLink(route(config('nova-export-configuration.defaults.download_route'), $fileModel->path))))
+                    ->action('Download', URL::remote($this->downloadLink($fileModel->download_link)))
                     ->icon('download')
                     ->type('info')
             );

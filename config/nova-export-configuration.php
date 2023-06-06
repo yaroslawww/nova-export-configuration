@@ -7,8 +7,9 @@ return [
     ],
 
     'defaults' => [
-        'disk'           => 'exports_configured',
-        'queue'          => 'export',
-        'download_route' => 'download.exports',
+        'disk'               => 'exports_configured',
+        'disk_export_action' => 'exports',
+        'queue'              => 'export',
+        'download_route'     => 'download.exports',
     ],
 ];

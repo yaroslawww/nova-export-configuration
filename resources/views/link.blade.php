@@ -1,8 +1,3 @@
-<?php
-if ( ! empty( $path ) ) {
-    $href = route(config('nova-export-configuration.defaults.download_route'), $path);
-}
-?>
 @if(!empty($href))
     <a
         href="{{$href}}"
