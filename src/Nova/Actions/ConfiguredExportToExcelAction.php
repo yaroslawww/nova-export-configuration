@@ -31,7 +31,7 @@ class ConfiguredExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Action
     }
 
 
-    public function handle(ActionRequest $request, Action $exportable): array
+    public function handle(ActionRequest $request, Action $exportable)
     {
         /** @var \NovaExportConfiguration\Models\ExportConfig $model */
         $model = $request->findModelOrFail($request->resources);

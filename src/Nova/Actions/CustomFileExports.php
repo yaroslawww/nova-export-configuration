@@ -3,6 +3,7 @@
 namespace NovaExportConfiguration\Nova\Actions;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ use NovaExportConfiguration\Export\CustomExport;
 use NovaExportConfiguration\Models\ExportStoredFile;
 use NovaExportConfiguration\NovaExportConfig;
 
-class CustomFileExports extends Action
+class CustomFileExports extends Action implements ShouldQueue
 {
     use InteractsWithQueue, Queueable;
     use AskForFilename,
