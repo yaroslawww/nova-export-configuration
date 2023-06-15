@@ -5,7 +5,6 @@ namespace NovaExportConfiguration\Nova\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\BooleanGroup;
@@ -13,10 +12,11 @@ use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Nova;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\LaravelNovaExcel\Actions\ExportToExcel;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use NovaExportConfiguration\Models\ExportStoredFile;
 
-class ExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Actions\ExportToExcel
+class ExportToExcelAction extends ExportToExcel
 {
     protected bool $columnsSelected = false;
     protected array $columns;
@@ -64,16 +64,25 @@ class ExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Actions\ExportTo
 
     public function handle(ActionRequest $request, Action $exportable): mixed
     {
-        $resource = $request->resource();
-        $type     = $resource::uriKey();
-        $name     = $this->getFilename();
-        $filename = date('Y/m/d/') . Str::uuid() . '.' . $this->getDefaultExtension();
-        $disk     = $this->getDisk() ?: config('nova-export-configuration.defaults.disk_export_action');
+        $dbExport = ExportStoredFile::init(
+            $request->resource()::uriKey(),
+            $this->getDisk() ?: config('nova-export-configuration.defaults.disk_export_action'),
+            date('Y/m/d/') . Str::uuid() . '.' . $this->getDefaultExtension(),
+            $this->getFilename(),
+            function ($file) use ($request) {
+                $file->meta
+                    ->setAttribute('fields', $request->resolveFields())
+                    ->setAttribute('filters', $request->filters);
+                if ($user = $request->user()) {
+                    $file->meta->toMorph('author', $user);
+                }
+            }
+        );
 
         $response = Excel::store(
             $exportable,
-            $filename,
-            $disk,
+            $dbExport->path,
+            $dbExport->disk,
             $this->getWriterType()
         );
 
@@ -81,17 +90,6 @@ class ExportToExcelAction extends \Maatwebsite\LaravelNovaExcel\Actions\ExportTo
             return \is_callable($this->onFailure)
                 ? ($this->onFailure)($request, $response)
                 : Action::danger(__('Resource could not be exported.'));
-        }
-
-        $dbExport       = new ExportStoredFile();
-        $dbExport->type = $type;
-        $dbExport->disk = $disk;
-        $dbExport->path = $filename;
-        $dbExport->name = $name;
-        $dbExport->meta->setAttribute('fields', $request->resolveFields());
-        $dbExport->meta->setAttribute('filters', $request->filters);
-        if ($user = Auth::user()) {
-            $dbExport->meta->toMorph('author', $user);
         }
 
         $dbExport->save();

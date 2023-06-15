@@ -10,8 +10,16 @@ use Laravel\Nova\Resource;
 use NovaExportConfiguration\Nova\Actions\CustomFileExports;
 use NovaExportConfiguration\NovaExportConfig;
 
+/**
+ * @extends Resource<\NovaExportConfiguration\Models\ExportStoredFile>
+ */
 class ExportStoredFile extends Resource
 {
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var class-string<\NovaExportConfiguration\Models\ExportStoredFile>
+     */
     public static $model = \NovaExportConfiguration\Models\ExportStoredFile::class;
 
     public static $title = 'name';

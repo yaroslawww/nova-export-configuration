@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use JsonFieldCast\Casts\SimpleJsonField;
+use NovaExportConfiguration\Database\Factories\ExportStoredFileFactory;
 
 /**
- * @property $meta \JsonFieldCast\Json\SimpleJsonField
+ * @property string $type
+ * @property string $disk
+ * @property string $path
+ * @property string $name
+ * @property \JsonFieldCast\Json\SimpleJsonField $meta
+ * @property-read string $download_link
  */
 class ExportStoredFile extends Model
 {
@@ -28,12 +34,7 @@ class ExportStoredFile extends Model
         return config('nova-export-configuration.tables.export_config_stored_files');
     }
 
-    protected static function newFactory()
-    {
-        return \NovaExportConfiguration\Database\Factories\ExportStoredFileFactory::new();
-    }
-
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -45,8 +46,28 @@ class ExportStoredFile extends Model
         });
     }
 
+    public static function init(string $type, string $disk, string $path, string $name, ?\Closure $tap = null): static
+    {
+        $model       = new static();
+        $model->type = $type;
+        $model->disk = $disk;
+        $model->path = $path;
+        $model->name = $name;
+
+        if(is_callable($tap)) {
+            $tap($model);
+        }
+
+        return $model;
+    }
+
     public function downloadLink(): Attribute
     {
         return Attribute::get(fn () => route(config('nova-export-configuration.defaults.download_route'), $this->path));
+    }
+
+    protected static function newFactory(): ExportStoredFileFactory
+    {
+        return ExportStoredFileFactory::new();
     }
 }

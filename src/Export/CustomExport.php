@@ -7,6 +7,10 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 
+/**
+ * Export class, allow developer to extend configuration
+ * and use it in nova admin as action to call.
+ */
 abstract class CustomExport implements WithEvents
 {
     use Exportable, HasFileModel, WithNotification;

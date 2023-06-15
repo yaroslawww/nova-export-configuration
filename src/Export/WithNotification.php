@@ -15,6 +15,12 @@ trait WithNotification
     protected ?string $notificationUserClass = null;
     protected ?int $notificationUserId       = null;
 
+    /**
+     * Set user data to end notifications for.
+     *
+     * @param Model|null $notificationUser
+     * @return $this
+     */
     public function setNotificationUser(?Model $notificationUser = null): static
     {
         $this->notificationUserId    = $notificationUser?->getKey();
@@ -23,16 +29,30 @@ trait WithNotification
         return $this;
     }
 
+    /**
+     * Find user to send notification.
+     *
+     * @return Model|null
+     */
     public function notificationUser(): ?Model
     {
-        $class = Relation::getMorphedModel($this->notificationUserClass);
-        if ($class) {
-            return $class::find($this->notificationUserId);
+        if ($this->notificationUserClass && $this->notificationUserId) {
+            $class = Relation::getMorphedModel($this->notificationUserClass);
+            if ($class && is_a($class, Model::class, true)) {
+                return $class::query()->find($this->notificationUserId);
+            }
         }
 
         return null;
     }
 
+
+    /**
+     * Send notification to user.
+     *
+     * @param ExportStoredFile $fileModel
+     * @return void
+     */
     public function notifyUser(ExportStoredFile $fileModel): void
     {
         $user = $this->notificationUser();

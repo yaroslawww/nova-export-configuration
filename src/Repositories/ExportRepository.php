@@ -4,12 +4,12 @@ namespace NovaExportConfiguration\Repositories;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Bus\PendingDispatch;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use NovaExportConfiguration\Export\ConfiguredExport;
 use NovaExportConfiguration\Export\ExportQuery;
 use NovaExportConfiguration\Export\NovaResourceConfig;
 use NovaExportConfiguration\Models\ExportConfig;
+use NovaExportConfiguration\Models\ExportStoredFile;
 
 abstract class ExportRepository
 {
@@ -57,11 +57,11 @@ abstract class ExportRepository
         return new $novaResourceConfigClass();
     }
 
-    public function export(ExportConfig $model, string $serialisedFileData)
+    public function export(ExportConfig $model, ExportStoredFile $file): ConfiguredExport
     {
         return $this->exportFile($model)
-                    ->setFileModelData($serialisedFileData)
-                    ->setNotificationUser(Auth::user());
+                    ->useStoreFile($file)
+                    ->setNotificationUser($file->meta->fromMorph('user'));
     }
 
     abstract public function isFilterKey(string $key): bool;

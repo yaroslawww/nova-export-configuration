@@ -8,6 +8,11 @@ trait HasFileModel
 {
     protected string $fileModelData = '';
 
+    public function useStoreFile(ExportStoredFile $file): static
+    {
+        return $this->setFileModelData(serialize($file));
+    }
+
     public function setFileModelData(string $fileModelData): static
     {
         $this->fileModelData = $fileModelData;

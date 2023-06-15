@@ -15,10 +15,16 @@ use NovaExportConfiguration\Nova\Filters\TypeFilter;
 use NovaExportConfiguration\NovaExportConfig;
 use NovaExportConfiguration\Repositories\ExportRepository;
 
+/**
+ * @extends Resource<\NovaExportConfiguration\Models\ExportConfig>
+ */
 class ExportConfiguration extends Resource
 {
     /**
-     * Override using service provider
+     * The model the resource corresponds to.
+     * Override using service provider.
+     *
+     * @var class-string<\NovaExportConfiguration\Models\ExportConfig>
      */
     public static $model;
 
@@ -35,11 +41,11 @@ class ExportConfiguration extends Resource
         $fields = [
             ID::make(__('ID'), 'id')->sortable(),
             Select::make(__('Type'), 'type')
-                  ->onlyOnForms()
-                  ->hideWhenUpdating()
-                  ->required()
-                  ->searchable()
-                  ->options(NovaExportConfig::typeOptions()),
+                ->onlyOnForms()
+                ->hideWhenUpdating()
+                ->required()
+                ->searchable()
+                ->options(NovaExportConfig::typeOptions()),
             Text::make(__('Type'), 'type')
                 ->displayUsing(fn ($val, $model) => NovaExportConfig::getRepositories()->getByName($model?->type)?->label())
                 ->hideWhenUpdating()
@@ -52,12 +58,12 @@ class ExportConfiguration extends Resource
                     'max:255',
                 ]),
             Textarea::make(__('Description'), 'description')
-                    ->hideFromIndex()
-                    ->alwaysShow()
-                    ->rules([
-                        'nullable',
-                        'max:3000',
-                    ]),
+                ->hideFromIndex()
+                ->alwaysShow()
+                ->rules([
+                    'nullable',
+                    'max:3000',
+                ]),
             Text::make(__('Description'), 'description')
                 ->displayUsing(fn ($val) => nl2br($val))
                 ->asHtml()
@@ -98,7 +104,7 @@ class ExportConfiguration extends Resource
     {
         return array_merge([
             (new ConfiguredExportToExcelAction())->askForFilename()
-                                                 ->askForWriterType(),
+                ->askForWriterType(),
             new RegenerateExportResultAction,
         ], NovaExportConfig::configurationActions($request));
     }

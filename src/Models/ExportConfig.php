@@ -40,7 +40,7 @@ class ExportConfig extends Model
         return \NovaExportConfiguration\Database\Factories\ExportConfigFactory::new();
     }
 
-    protected static function booted()
+    protected static function booted(): void
     {
         static::saving(function (self $model) {
             if ($model->isDirty('filters')) {
