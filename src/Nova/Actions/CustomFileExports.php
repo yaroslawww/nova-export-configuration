@@ -10,8 +10,11 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use NovaExportConfiguration\Export\CustomExport;
@@ -24,6 +27,8 @@ class CustomFileExports extends Action
     use AskForFilename,
         AskForWriterType,
         WithDisk,
+        WithFilename,
+        WithWriterType,
         WithQueue;
 
     public $standalone = true;
@@ -56,10 +61,24 @@ class CustomFileExports extends Action
         return __('Custom Exports');
     }
 
+    public function handleRequest(ActionRequest $request)
+    {
+        $this->handleWriterType($request);
+        $this->handleFilename($request);
+
+        return parent::handleRequest($request);
+    }
+
     public function handle(ActionFields $fields, Collection $models)
     {
+        $exportName = $fields->get('export');
+
+        if (!$exportName) {
+            return Action::danger(__('Export not selected.'));
+        }
+
         /** @var CustomExport $exportable */
-        $exportable = NovaExportConfig::customExportsByKey($fields->get('export'));
+        $exportable = NovaExportConfig::customExportsByKey($exportName);
         if (!$exportable) {
             return Action::danger(__('Exportable config not found'));
         }
@@ -69,8 +88,8 @@ class CustomFileExports extends Action
         $dbExport = ExportStoredFile::init(
             'custom-export',
             $this->getDisk() ?: $exportable::diskName(),
-            date('Y/m/d/') . Str::uuid() . '.' . Str::lower($writerType ?: 'xlsx'),
-            $fields->get('filename', $exportable::name()) . '.' . Str::lower($writerType ?: 'xlsx'),
+            date('Y/m/d/') . Str::uuid() . '.' . $this->getDefaultExtension(),
+            $this->getFilename(),
             function ($file) {
                 if ($user = Auth::user()) {
                     $file->meta->toMorph('author', $user);
@@ -107,7 +126,13 @@ class CustomFileExports extends Action
             Select::make('Export', 'export')
                 ->options($this->exportsList)
                 ->required()
-                ->displayUsingLabels(),
+                ->displayUsingLabels()
+                ->rules(['required']),
         ], $this->actionFields);
+    }
+
+    protected function getDefaultExtension(): string
+    {
+        return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
     }
 }

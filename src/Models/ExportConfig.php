@@ -55,7 +55,7 @@ class ExportConfig extends Model
         return NovaExportConfig::getRepositories()->getByName($this->attributes['type']??null);
     }
 
-    public function updateConfigurationContent(bool $persist = false)
+    public function updateConfigurationContent(bool $persist = false): static
     {
         if ($repo = $this->exportRepository()) {
             $this->fill([
@@ -67,6 +67,8 @@ class ExportConfig extends Model
                 $this->save();
             }
         }
+
+        return $this;
     }
 
     public function setAttribute($key, $value)
