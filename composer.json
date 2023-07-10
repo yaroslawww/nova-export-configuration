@@ -17,15 +17,15 @@
     "require": {
         "php": "^8.1",
         "laravel/nova": "^4.0",
-        "yaroslawww/laravel-json-field-cast": "^2.1",
+        "think.studio/laravel-json-field-cast": "^2.1",
         "maatwebsite/laravel-nova-excel": "^1.3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.11",
-        "orchestra/testbench": "^8.4",
-        "phpunit/phpunit": "^10.0",
-        "psalm/plugin-laravel": "^2.0",
-        "vimeo/psalm": "^5.9"
+        "friendsofphp/php-cs-fixer": "^3.20",
+        "orchestra/testbench": "^8.5",
+        "phpunit/phpunit": "^10.2",
+        "psalm/plugin-laravel": "^2.8",
+        "vimeo/psalm": "^5.13"
     },
     "autoload": {
         "psr-4": {
@@ -46,10 +46,10 @@
         }
     },
     "scripts": {
-        "test": "XDEBUG_MODE=coverage vendor/bin/phpunit --stop-on-failure",
+        "psalm": "vendor/bin/psalm",
+        "test": "XDEBUG_MODE=coverage vendor/bin/phpunit",
         "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
-        "psalm": "vendor/bin/psalm"
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     },
     "config": {
         "sort-packages": true
