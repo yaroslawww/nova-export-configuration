@@ -9,7 +9,7 @@ use NovaExportConfiguration\Export\ConfiguredExport;
 use NovaExportConfiguration\Export\ExportQuery;
 use NovaExportConfiguration\Export\NovaResourceConfig;
 use NovaExportConfiguration\Models\ExportConfig;
-use NovaExportConfiguration\Models\ExportStoredFile;
+use NovaResourceDynamicExport\Models\ExportStoredFile;
 
 abstract class ExportRepository
 {

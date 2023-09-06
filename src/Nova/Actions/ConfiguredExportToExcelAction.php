@@ -6,8 +6,8 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\ExportToExcel;
-use NovaExportConfiguration\Models\ExportStoredFile;
 use NovaExportConfiguration\NovaExportConfig;
+use NovaResourceDynamicExport\Models\ExportStoredFile;
 
 class ConfiguredExportToExcelAction extends ExportToExcel
 {
@@ -74,3 +74,8 @@ class ConfiguredExportToExcelAction extends ExportToExcel
         return Action::message(__('Export started.'));
     }
 }
+
+
+// Global ESG Equity Market Neutral strategy with a focus on Europe.
+// Impact with less volatility and market factors.
+//Working across renewables, waste, water, circular economy, clean transportation and Argriculture.

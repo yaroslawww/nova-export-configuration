@@ -6,14 +6,8 @@ use NovaExportConfiguration\Nova\Resources\ExportConfiguration;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'nova-export-configuration');
-
-        if (NovaExportConfig::$useRoutes) {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        }
-
         if ($this->app->runningInConsole()) {
             if (NovaExportConfig::$runsMigrations) {
                 $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -35,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/nova-export-configuration.php', 'nova-export-configuration');
     }
 
-    public function configureExportResource()
+    public function configureExportResource(): void
     {
         ExportConfiguration::$model = NovaExportConfig::$configurationModelClass;
         ExportConfiguration::$group = __('Export');

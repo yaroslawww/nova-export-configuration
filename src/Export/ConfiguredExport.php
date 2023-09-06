@@ -11,6 +11,8 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
+use NovaResourceDynamicExport\Export\HasFileModel;
+use NovaResourceDynamicExport\Export\WithNotification;
 
 abstract class ConfiguredExport implements FromQuery, WithMapping, WithEvents, WithHeadings, WithCustomChunkSize
 {
